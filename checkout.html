@@ -1,76 +1,254 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - AirBank</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Checkout | AirBank</title>
+
+    <!-- ===== CSS Embutido ===== -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: white;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #00ff9d;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #141414;
+            color: white;
+        }
+
+        input:focus {
+            outline: 2px solid #00ff9d;
+        }
+
+        .btn-comprar {
+            width: 100%;
+            padding: 12px;
+            background-color: #00ff9d;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .btn-comprar:hover {
+            background-color: #00d482;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .modal-content {
+            background-color: white;
+            color: black;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .btn-mercado {
+            background-color: #009ee3;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-pix {
+            background-color: #00b894;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-mercado:hover {
+            background-color: #007bb9;
+        }
+
+        .btn-pix:hover {
+            background-color: #009f7c;
+        }
+
+        .btn-cancelar {
+            margin-top: 10px;
+            background: none;
+            color: #555;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancelar:hover {
+            text-decoration: underline;
+        }
+
+        /* PIX Section */
+        .pix-section {
+            background-color: #1a1a1a;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            border: 1px solid #00ff9d;
+        }
+
+        .pix-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pix-content img {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            border: 2px solid #00ff9d;
+        }
+
+        .pix-chave {
+            background-color: #141414;
+            padding: 10px;
+            border-radius: 8px;
+            word-break: break-word;
+            border: 1px solid #444;
+            max-width: 100%;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
-<body class="bg-neutral-950 text-white">
 
-    <div class="max-w-3xl mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">Finalizar Compra</h1>
+<body>
 
-        <!-- Formulário -->
-        <form id="checkoutForm" class="space-y-4">
-            <div>
-                <label>Nome</label>
-                <input type="text" name="nome" required class="w-full bg-neutral-800 rounded px-4 py-2">
-            </div>
-            <div>
-                <label>Sobrenome</label>
-                <input type="text" name="sobrenome" required class="w-full bg-neutral-800 rounded px-4 py-2">
-            </div>
-            <div>
-                <label>Email</label>
-                <input type="email" name="email" required class="w-full bg-neutral-800 rounded px-4 py-2">
-            </div>
-            <div>
-                <label>Telefone</label>
-                <input type="text" name="telefone" required class="w-full bg-neutral-800 rounded px-4 py-2">
-            </div>
+    <main>
+        <section class="checkout">
+            <div class="container">
 
-            <button type="button" onclick="openPaymentModal()"
-                class="w-full bg-blue-600 hover:bg-blue-700 rounded px-4 py-3">
-                Prosseguir para Pagamento
-            </button>
-        </form>
+                <h2>Finalize sua compra</h2>
 
-        <!-- Modal Escolha -->
-        <div id="paymentModal"
-            class="hidden fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50">
-            <div class="bg-white text-black p-6 rounded-lg">
-                <h2 class="text-xl mb-4">Escolha a forma de pagamento</h2>
-                <div class="flex gap-4">
-                    <button onclick="payWithMercadoPago()"
-                        class="bg-blue-600 px-4 py-2 text-white rounded hover:bg-blue-700">Mercado Pago</button>
-                    <button onclick="payWithPix()"
-                        class="bg-green-600 px-4 py-2 text-white rounded hover:bg-green-700">PIX</button>
+                <form id="checkoutForm">
+                    <div class="grid">
+                        <div class="form-group">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="Nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sobrenome">Sobrenome</label>
+                            <input type="text" id="sobrenome" name="Sobrenome" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" name="Email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefone">Telefone</label>
+                        <input type="text" id="telefone" name="Telefone" required>
+                    </div>
+
+                    <button type="button" onclick="openPaymentModal()" class="btn-comprar">
+                        Prosseguir para pagamento
+                    </button>
+                </form>
+
+                <!-- Seção do PIX -->
+                <div id="pixSection" class="pix-section hidden">
+                    <h3>Escaneie o QR Code ou Copie a Chave PIX para efetuar o pagamento!</h3>
+                    <div class="pix-content">
+                        <img id="qr-code-img" alt="QR Code PIX">
+                        <p id="qr-code-text" class="pix-chave"></p>
+                        <button onclick="window.location.href='obrigado.html'" class="btn-pix">
+                            Já realizei o pagamento
+                        </button>
+                    </div>
                 </div>
-                <button onclick="closeModal()"
-                    class="mt-4 text-sm text-gray-700 hover:underline">Cancelar</button>
-            </div>
-        </div>
 
-        <!-- Seção PIX -->
-        <div id="pixSection" class="hidden bg-neutral-900 border border-gray-700 rounded-lg p-4 mt-8">
-            <h3 class="text-lg font-semibold mb-2">
-                Escaneie o QR Code ou Copie a Chave PIX para efetuar o pagamento!
-            </h3>
-            <div class="flex flex-col items-center">
-                <img id="qr-code-img" class="mb-4 w-48 h-48" alt="QR Code PIX">
-                <p id="qr-code-text"
-                    class="text-center bg-neutral-800 p-2 rounded break-all text-sm border border-gray-600">
-                </p>
-                <button onclick="window.location.href='obrigado.html'"
-                    class="mt-4 bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-white">
-                    Já realizei o pagamento
-                </button>
             </div>
+        </section>
+    </main>
+
+    <!-- Modal Escolha -->
+    <div id="paymentModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Escolha a forma de pagamento</h2>
+            <div class="modal-buttons">
+                <button onclick="payWithMercadoPago()" class="btn-mercado">Mercado Pago</button>
+                <button onclick="payWithPix()" class="btn-pix">PIX</button>
+            </div>
+            <button onclick="closeModal()" class="btn-cancelar">Cancelar</button>
         </div>
     </div>
 
-    <!-- Scripts -->
     <script>
         function openPaymentModal() {
             document.getElementById('paymentModal').classList.remove('hidden');
@@ -117,4 +295,5 @@
     </script>
 
 </body>
+
 </html>

@@ -61,10 +61,11 @@ exports.handler = async (event) => {
 
     const response = await mercadopago.preferences.create(pref);
 
-    return {
-      statusCode: 200,
-      headers: corsHeaders,
-      body: JSON.stringify({ init_point: response.body.init_point })
+   return {
+  statusCode: 200,
+  headers: corsHeaders,
+  body: JSON.stringify({ init_point: response.body.init_point })
+};
   } catch (e) {
     console.error('Erro ao criar preferência:', e);
     return {

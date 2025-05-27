@@ -350,9 +350,11 @@ document.getElementById('submit-form-btn').addEventListener('click', async funct
 
         const data = await response.json();
 
-        if (!data.preferenceId) {
-            throw new Error('Erro ao gerar preferência');
-        }
+        if (!data.init_point) {
+    throw new Error('Erro ao gerar preferência');
+}
+
+window.location.href = data.init_point;
 
         // Cria o botão de pagamento
         mp.bricks().create("wallet", "payment-button", {

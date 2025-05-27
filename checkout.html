@@ -405,14 +405,15 @@ async function sendFinalData() {
         formData.paymentStatus = 'approved';
         formData.paymentMethod = 'Mercado Pago';
 
-        const response = await fetch('https://formsubmit.co/ajax/airbankse@gmail.com', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+        const response = await fetch('/.netlify/functions/createPreference', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        title: 'AirBankSE - Mini Bomba de Ar',
+        quantity: 1,
+        unit_price: 297.00
+    })
+});
 
         const result = await response.json();
 

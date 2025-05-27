@@ -1,4 +1,3 @@
-
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -13,19 +12,11 @@ const corsHeaders = {
 
 exports.handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: corsHeaders,
-      body: ''
-    };
+    return { statusCode: 200, headers: corsHeaders, body: '' };
   }
 
   if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: corsHeaders,
-      body: JSON.stringify({ error: 'Método não permitido' })
-    };
+    return { statusCode: 405, headers: corsHeaders, body: JSON.stringify({ error: 'Método não permitido' }) };
   }
 
   try {
@@ -53,7 +44,7 @@ exports.handler = async (event) => {
       })
     };
   } catch (error) {
-    console.error(error);
+    console.error('Erro ao gerar pagamento PIX:', error);
     return {
       statusCode: 500,
       headers: corsHeaders,

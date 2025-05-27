@@ -381,12 +381,7 @@ document.getElementById('submit-form-btn').addEventListener('click', async funct
         formSubmitted = true;
         checkCompletion();
 
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Ocorreu um erro. Por favor, tente novamente.');
-        button.innerHTML = originalText;
-        button.disabled = false;
-    }
+    } 
 });
 
 // Verifica se formulário e pagamento foram concluídos

@@ -51,11 +51,11 @@ exports.handler = async (event) => {
           currency_id: 'BRL'
         }
       ],
-      back_urls: {
-        success: 'https://beautiful-smakager-ad5522.netlify.app/obrigado.html',
-        failure: 'https://beautiful-smakager-ad5522.netlify.app/erro.html',
-        pending: 'https://beautiful-smakager-ad5522.netlify.app/pendente.html'
-      },
+     back_urls: {
+  success: 'https://airbank.netlify.app/obrigado.html',
+  failure: 'https://airbank.netlify.app/erro.html',
+  pending: 'https://airbank.netlify.app/pendente.html'
+},
       auto_return: 'approved'
     };
 

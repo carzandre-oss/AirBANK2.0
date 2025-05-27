@@ -64,8 +64,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: corsHeaders,
-      body: JSON.stringify({ preferenceId: response.body.id })
-    };
+      body: JSON.stringify({ init_point: response.body.init_point })
   } catch (e) {
     console.error('Erro ao criar preferência:', e);
     return {

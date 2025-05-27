@@ -952,7 +952,7 @@
       <!-- Contact Form -->
       <div class="w-full md:w-1/2 bg-dark rounded-xl p-8 shadow-lg">
         <h3 class="text-2xl font-bold mb-6">Envie uma mensagem</h3>
-        <form action="https://formsubmit.co/airbankse@gmail.com" method="POST" class="space-y-6">
+        <form id="contactForm" class="space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label for="firstName" class="block text-gray-light mb-2">Nome</label>
@@ -979,7 +979,32 @@
           <button class="bg-accent hover:bg-accent-dark text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 shadow-lg w-full">
             ENVIAR MENSAGEM
           </button>
+            <script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // Envia os dados para o FormSubmit via fetch (POST)
+    await fetch('https://formsubmit.co/ajax/airbankse@gmail.com', {
+        method: 'POST',
+        body: formData
+    });
+
+    // Após o envio, rola para o topo da página
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+
+    // Limpa o formulário (opcional)
+    form.reset();
+
+    // (Opcional) Exibir uma mensagem de sucesso
+    alert('Mensagem enviada com sucesso!');
+});
+</script>
         
         </form>
       </div>

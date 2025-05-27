@@ -1,8 +1,0 @@
-
-{
-  "name": "airbank",
-  "version": "1.0.0",
-  "dependencies": {
-    "mercadopago": "^1.5.13"
-  }
-}

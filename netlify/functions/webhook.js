@@ -1,3 +1,4 @@
+
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -12,8 +13,8 @@ exports.handler = async (event) => {
 
     const body = JSON.parse(event.body);
 
-    if (body.type !== 'payment') {
-        return { statusCode: 200, body: 'Not a payment notification' };
+    if (body.type !== 'payment' && body.type !== 'merchant_order') {
+        return { statusCode: 200, body: 'Not a tracked notification' };
     }
 
     try {
@@ -21,13 +22,13 @@ exports.handler = async (event) => {
         const status = payment.body.status;
         const paymentMethod = payment.body.payment_method_id;
         const email = payment.body.payer.email;
-        const nome = payment.body.payer.first_name + ' ' + payment.body.payer.last_name;
+        const nome = payment.body.payer.first_name + ' ' + (payment.body.payer.last_name || '');
 
-        console.log(`Pagamento recebido. Status: ${status}`);
+        console.log(`✅ Pagamento atualizado:`);
+        console.log(`Status: ${status}`);
         console.log(`Cliente: ${nome} - ${email}`);
         console.log(`Método: ${paymentMethod}`);
-
-        // Aqui você pode disparar qualquer ação, como envio de e-mail ou armazenar no banco.
+        console.log(`Valor: R$ ${payment.body.transaction_amount}`);
 
         return {
             statusCode: 200,

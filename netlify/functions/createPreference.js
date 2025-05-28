@@ -1,3 +1,4 @@
+
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -19,9 +20,9 @@ exports.handler = async (event) => {
         const preference = {
             items: [
                 {
-                    title: 'AirBank SE COMPACT',
-                    quantity: 1,
-                    unit_price: 297.90,
+                    title: title || 'AirBank SE COMPACT',
+                    quantity: quantity || 1,
+                    unit_price: unit_price || 297.90,
                     currency_id: 'BRL',
                 }
             ],

@@ -1,3 +1,4 @@
+
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -41,7 +42,6 @@ exports.handler = async (event) => {
         const payment = await mercadopago.payment.create(paymentData);
 
         const { id, point_of_interaction } = payment.body;
-
         const qrCode = point_of_interaction.transaction_data?.qr_code || null;
         const qrCodeBase64 = point_of_interaction.transaction_data?.qr_code_base64 || null;
 

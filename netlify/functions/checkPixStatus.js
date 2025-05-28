@@ -1,3 +1,4 @@
+
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({

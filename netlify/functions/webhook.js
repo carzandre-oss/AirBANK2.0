@@ -1,7 +1,7 @@
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
-    access_token: 'SEU_ACCESS_TOKEN_AQUI' // Coloque sua Access Token
+    access_token: 'APP_USR-850320183172539-052512-879be84cb4790b3ee3006551f7be8049-2456283423' // Coloque sua Access Token
 });
 
 exports.handler = async (event) => {

@@ -1,56 +1,41 @@
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN
+  access_token: process.env.MP_ACCESS_TOKEN // 🔑 Sua chave de acesso de produção no Environment da Netlify
 });
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type'
-};
-
 exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: corsHeaders, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: corsHeaders, body: JSON.stringify({ error: 'Método não permitido' }) };
-  }
-
   try {
-    const body = JSON.parse(event.body);
-
-    const pref = {
+    const preference = {
       items: [
         {
-          title: body.title || 'AirBank SE Compact',
-          quantity: body.quantity || 1,
-          unit_price: body.unit_price || 297.9,
-          currency_id: 'BRL'
+          title: 'AirBank SE COMPACT',
+          quantity: 1,
+          currency_id: 'BRL',
+          unit_price: 297.90
         }
       ],
       back_urls: {
         success: 'https://airbank.netlify.app/obrigado.html',
-        failure: 'https://airbank.netlify.app/erro.html',
-        pending: 'https://airbank.netlify.app/pendente.html'
+        pending: 'https://airbank.netlify.app/pendente.html',
+        failure: 'https://airbank.netlify.app/erro.html'
       },
       auto_return: 'approved'
     };
 
-    const response = await mercadopago.preferences.create(pref);
+    const result = await mercadopago.preferences.create(preference);
 
     return {
       statusCode: 200,
-      headers: corsHeaders,
-      body: JSON.stringify({ init_point: response.body.init_point })
+      body: JSON.stringify({
+        init_point: result.body.init_point, // 🚀 Link para redirecionamento direto
+        preferenceId: result.body.id // 🔧 (Se quiser usar para outra coisa)
+      })
     };
   } catch (error) {
     console.error('Erro ao criar preferência:', error);
     return {
       statusCode: 500,
-      headers: corsHeaders,
       body: JSON.stringify({ error: 'Erro ao criar preferência' })
     };
   }

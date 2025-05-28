@@ -346,36 +346,35 @@
 }
 
     // 👉 PIX
-    function payWithPix() {
-        hideMpArea();
+   function payWithPix() {
+    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
-        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
-
-        fetch('/.netlify/functions/createPixPayment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'AirBankSE - Mini Bomba de Ar',
-                quantity: 1,
-                unit_price: 297.90,
-                nome: formData.nome,
-                email: formData.email,
-                cpf: formData.cpf,
-                telefone: formData.telefone
-            })
+    fetch('/.netlify/functions/createPixPayment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            nome: formData.nome,
+            email: formData.email,
+            cpf: formData.cpf
         })
-        .then(res => res.json())
-        .then(data => {
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.qr_code_base64 && data.qr_code) {
             document.getElementById('pix-area').classList.remove('hidden');
             document.getElementById('qr-code-img').src = 'data:image/png;base64,' + data.qr_code_base64;
             document.getElementById('qr-code-text').innerText = data.qr_code;
             checkPixStatus(data.payment_id);
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao gerar cobrança PIX.');
-        });
-    }
+        } else {
+            alert('Erro ao gerar QR Code. Verifique os dados ou tente novamente.');
+            console.error('Resposta inválida:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao gerar cobrança PIX:', error);
+        alert('Erro ao gerar cobrança PIX.');
+    });
+}
 
     // 👉 Verifica status do PIX
     function checkPixStatus(paymentId) {

@@ -1,7 +1,7 @@
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN
+  access_token: 'APP_USR-850320183172539-052512-879be84cb4790b3ee3006551f7be8049-2456283423'
 });
 
 const corsHeaders = {
@@ -20,13 +20,13 @@ exports.handler = async (event) => {
   }
 
   try {
-    const pref = {
+    const preference = {
       items: [
         {
           title: 'AirBank SE Compact',
           quantity: 1,
-          unit_price: 297.9,
-          currency_id: 'BRL'
+          currency_id: 'BRL',
+          unit_price: 297.9
         }
       ],
       back_urls: {
@@ -37,12 +37,12 @@ exports.handler = async (event) => {
       auto_return: 'approved'
     };
 
-    const response = await mercadopago.preferences.create(pref);
+    const response = await mercadopago.preferences.create(preference);
 
     return {
       statusCode: 200,
       headers: corsHeaders,
-      body: JSON.stringify({ init_point: response.body.init_point })
+      body: JSON.stringify({ preferenceId: response.body.id })
     };
   } catch (error) {
     console.error('Erro ao criar preferência:', error);

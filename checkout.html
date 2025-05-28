@@ -290,6 +290,26 @@
     </div>
     
 <script>
+    document.getElementById('submit-form-btn').addEventListener('click', function() {
+    const form = document.getElementById('checkoutForm');
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    // Esconde o botão
+    this.style.display = 'none';
+
+    // Mostra a seção de pagamento
+    document.getElementById('payment-section').classList.remove('hidden');
+
+    // Scroll suave até a seção de pagamento
+    window.scrollTo({
+        top: document.getElementById('payment-section').offsetTop - 100,
+        behavior: 'smooth'
+    });
+});
 const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' }); // Substitua pela sua Public Key do Mercado Pago
 
 // Formata Telefone

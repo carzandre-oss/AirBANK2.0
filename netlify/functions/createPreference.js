@@ -18,10 +18,11 @@ exports.handler = async (event) => {
         const preference = {
             items: [
                 {
-                    title: title,
-                    quantity: quantity,
-                    currency_id: 'BRL',
-                    unit_price: unit_price,
+            title: 'AirBank SE COMPACT',
+            quantity: 1,
+            unit_price: 297.90
+            currency_id: 'BRL',
+                   
                 }
             ],
             back_urls: {

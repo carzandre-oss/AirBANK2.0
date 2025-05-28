@@ -27,7 +27,7 @@ exports.handler = async (event) => {
             description: "AirBank SE COMPACT",
             payment_method_id: "pix",
             payer: {
-                email: email,
+                email,
                 first_name: nome,
                 identification: {
                     type: "CPF",
@@ -38,8 +38,6 @@ exports.handler = async (event) => {
         };
 
         const payment = await mercadopago.payment.create(paymentData);
-
-        console.log('Resposta do Mercado Pago:', payment);
 
         const { id, point_of_interaction } = payment.body;
 
@@ -55,7 +53,10 @@ exports.handler = async (event) => {
         console.error('❌ Erro ao gerar pagamento PIX:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Erro interno ao gerar PIX', details: error.message })
+            body: JSON.stringify({ 
+                error: 'Erro interno ao gerar PIX', 
+                details: error.message 
+            })
         };
     }
 };

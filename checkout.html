@@ -317,41 +317,33 @@
 
     // 👉 Mercado Pago
     function payWithMercadoPago() {
-        hidePixArea();
-        clearMpButton();
+    hidePixArea();
 
-        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
-        fetch('/.netlify/functions/createPreference', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'AirBankSE - Mini Bomba de Ar',
-                quantity: 1,
-                unit_price: 297.00
-            })
+    fetch('/.netlify/functions/createPreference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: 'AirBank SE COMPACT',
+            quantity: 1,
+            unit_price: 297.90
         })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('mp-area').classList.remove('hidden');
-
-            mp.bricks().create("wallet", "wallet_container", {
-                initialization: {
-                    preferenceId: data.preferenceId,
-                },
-                callbacks: {
-                    onSubmit: () => {
-                        sendClientData('Mercado Pago');
-                        window.location.href = 'obrigado.html';
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert('Erro ao iniciar pagamento.');
-        });
-    }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.init_point) {
+            window.location.href = data.init_point; // 🔥 Redireciona para a página de pagamento
+        } else {
+            alert('Erro ao criar pagamento.');
+            console.error('Erro no pagamento:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao iniciar pagamento.');
+    });
+}
 
     // 👉 PIX
     function payWithPix() {

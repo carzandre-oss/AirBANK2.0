@@ -290,166 +290,170 @@
     </div>
     
 <script>
-    const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
+   const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
 
-    // 🔸 Abre a seção de pagamento
-    document.getElementById('submit-form-btn').addEventListener('click', function() {
-        const form = document.getElementById('checkoutForm');
+// Abre a seção de pagamento
+document.getElementById('submit-form-btn').addEventListener('click', function() {
+    const form = document.getElementById('checkoutForm');
 
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
 
-        // Esconde o botão
-        this.style.display = 'none';
+    this.style.display = 'none';
+    document.getElementById('payment-section').classList.remove('hidden');
 
-        // Mostra a seção de pagamento
-        document.getElementById('payment-section').classList.remove('hidden');
-
-        // Scroll suave até a seção de pagamento
-        window.scrollTo({
-            top: document.getElementById('payment-section').offsetTop - 100,
-            behavior: 'smooth'
-        });
+    window.scrollTo({
+        top: document.getElementById('payment-section').offsetTop - 100,
+        behavior: 'smooth'
     });
+});
 
-    // 🔸 Função Mercado Pago
-    function payWithMercadoPago() {
-        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
-        localStorage.setItem('checkoutData', JSON.stringify(formData));
+// Mercado Pago
+function payWithMercadoPago() {
+    hidePixArea();
 
-        fetch('/.netlify/functions/createPreference', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                title: 'AirBankSE - Mini Bomba de Ar',
-                quantity: 1,
-                unit_price: 297.00
-            })
+    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+    localStorage.setItem('checkoutData', JSON.stringify(formData));
+
+    fetch('/.netlify/functions/createPreference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: 'AirBankSE - Mini Bomba de Ar',
+            quantity: 1,
+            unit_price: 297.00
         })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('mp-area').classList.remove('hidden');
-            mp.bricks().create("wallet", "wallet_container", {
-                initialization: {
-                    preferenceId: data.preferenceId,
-                },
-                callbacks: {
-                    onSubmit: () => {
-                        sendClientData('Mercado Pago');
-                        window.location.href = 'obrigado.html';
-                    }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('mp-area').classList.remove('hidden');
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: data.preferenceId,
+            },
+            callbacks: {
+                onSubmit: () => {
+                    sendClientData('Mercado Pago');
+                    window.location.href = 'obrigado.html';
+                }
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao iniciar pagamento.');
+    });
+}
+
+// PIX
+function payWithPix() {
+    hideMpArea();
+
+    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+    localStorage.setItem('checkoutData', JSON.stringify(formData));
+
+    fetch('/.netlify/functions/createPixPayment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: 'AirBankSE - Mini Bomba de Ar',
+            quantity: 1,
+            unit_price: 297.00,
+            nome: formData.nome,
+            email: formData.email,
+            cpf: formData.cpf,
+            telefone: formData.telefone
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('pix-area').classList.remove('hidden');
+        document.getElementById('qr-code-img').src = 'data:image/png;base64,' + data.qr_code_base64;
+        document.getElementById('qr-code-text').innerText = data.qr_code;
+        checkPixStatus(data.payment_id);
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao gerar cobrança PIX.');
+    });
+}
+
+// Verifica o status do PIX
+function checkPixStatus(paymentId) {
+    const interval = setInterval(() => {
+        fetch(`/.netlify/functions/checkPixStatus?id=${paymentId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'approved') {
+                    clearInterval(interval);
+                    sendClientData('PIX');
+                    window.location.href = 'obrigado.html';
                 }
             });
+    }, 5000);
+}
+
+// Envia os dados do cliente após pagamento
+function sendClientData(paymentMethod) {
+    const form = document.getElementById('checkoutForm');
+    const formData = Object.fromEntries(new FormData(form));
+
+    fetch("https://formsubmit.co/ajax/airbankse@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            ...formData,
+            paymentStatus: 'Aprovado',
+            paymentMethod: paymentMethod
         })
-        .catch(error => {
-            console.error('Erro ao criar preferência:', error);
-            alert('Erro ao iniciar pagamento.');
-        });
-    }
-
-    // 🔸 Função PIX
-    function payWithPix() {
-        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
-        localStorage.setItem('checkoutData', JSON.stringify(formData));
-
-        fetch('/.netlify/functions/createPixPayment', {
-            method: 'POST',
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('pix-area').classList.remove('hidden');
-            document.getElementById('qr-code-img').src = 'data:image/png;base64,' + data.qr_code_base64;
-            document.getElementById('qr-code-text').innerText = data.qr_code;
-            checkPixStatus(data.payment_id);
-        });
-    }
-
-    // 🔸 Verifica status do PIX automaticamente
-    function checkPixStatus(paymentId) {
-        const interval = setInterval(() => {
-            fetch(`/.netlify/functions/checkPixStatus?id=${paymentId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === 'approved') {
-                        clearInterval(interval);
-                        sendClientData('PIX');
-                        window.location.href = 'obrigado.html';
-                    }
-                });
-        }, 5000);
-    }
-
-    // 🔸 Envia dados do cliente para o FormSubmit após o pagamento
-    function sendClientData(paymentMethod) {
-        const form = document.getElementById('checkoutForm');
-        const formData = Object.fromEntries(new FormData(form));
-
-        fetch("https://formsubmit.co/ajax/airbankse@gmail.com", {
-            method: "POST",
-            headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                ...formData,
-                paymentStatus: 'Aprovado',
-                paymentMethod: paymentMethod
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Dados enviados para o e-mail:', data);
-        })
-        .catch(error => {
-            console.error('Erro ao enviar dados:', error);
-        });
-    }
-
-    // 🔸 Formata Telefone
-    document.getElementById('telefone').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
-
-        if (value.length > 10) {
-            value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-        } else if (value.length > 6) {
-            value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-        } else if (value.length > 2) {
-            value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-        }
-
-        e.target.value = value;
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Dados enviados com sucesso:', data);
+    })
+    .catch(error => {
+        console.error('Erro ao enviar dados:', error);
     });
+}
 
-    // 🔸 Formata CPF
-    document.getElementById('cpf').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.slice(0, 11);
+// Esconde áreas quando troca o método
+function hidePixArea() {
+    document.getElementById('pix-area').classList.add('hidden');
+}
 
-        if (value.length > 9) {
-            value = value.replace(/^(\d{3})(\d{3})(\d{3})/, '$1.$2.$3-');
-        } else if (value.length > 6) {
-            value = value.replace(/^(\d{3})(\d{3})/, '$1.$2.');
-        } else if (value.length > 3) {
-            value = value.replace(/^(\d{3})/, '$1.');
-        }
+function hideMpArea() {
+    document.getElementById('mp-area').classList.add('hidden');
+}
 
-        e.target.value = value;
-    });
+// Máscaras
+document.getElementById('telefone').addEventListener('input', formatPhone);
+document.getElementById('cpf').addEventListener('input', formatCpf);
+document.getElementById('cep').addEventListener('input', formatCep);
 
-    // 🔸 Formata CEP
-    document.getElementById('cep').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 8) value = value.slice(0, 8);
+function formatPhone(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    v = v.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    e.target.value = v;
+}
 
-        if (value.length > 5) {
-            value = value.replace(/^(\d{5})/, '$1-');
-        }
+function formatCpf(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+    v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+    e.target.value = v;
+}
 
-        e.target.value = value;
-    });
+function formatCep(e) {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+    v = v.replace(/^(\d{5})(\d)/, '$1-$2');
+    e.target.value = v;
+}
 </script>
 </body>
 </html>

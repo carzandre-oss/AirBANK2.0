@@ -1,42 +1,43 @@
-const mercadopago = require('mercadopago');
+function payWithMercadoPago() {
+    hidePixArea();
 
-mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN // 🔑 Sua chave de acesso de produção no Environment da Netlify
-});
+    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
-exports.handler = async (event) => {
-  try {
-    const preference = {
-      items: [
-        {
-          title: 'AirBank SE COMPACT',
-          quantity: 1,
-          currency_id: 'BRL',
-          unit_price: 297.90
+    fetch('/.netlify/functions/createPreference', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            title: 'AirBank SE COMPACT',
+            quantity: 1,
+            unit_price: 297.00
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('mp-area').classList.remove('hidden');
+
+        // 🔥 Destroi botão antigo se já existir
+        if (walletBrick) {
+            walletBrick.unmount();
         }
-      ],
-      back_urls: {
-        success: 'https://airbank.netlify.app/obrigado.html',
-        pending: 'https://airbank.netlify.app/pendente.html',
-        failure: 'https://airbank.netlify.app/erro.html'
-      },
-      auto_return: 'approved'
-    };
 
-    const result = await mercadopago.preferences.create(preference);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        init_point: result.body.init_point, // 🚀 Link para redirecionamento direto
-        preferenceId: result.body.id // 🔧 (Se quiser usar para outra coisa)
-      })
-    };
-  } catch (error) {
-    console.error('Erro ao criar preferência:', error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Erro ao criar preferência' })
-    };
-  }
-};
+        // 🔥 Cria botão novo
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: data.preferenceId,
+            },
+            callbacks: {
+                onSubmit: () => {
+                    sendClientData('Mercado Pago');
+                    window.location.href = 'obrigado.html';
+                }
+            }
+        }).then(brick => {
+            walletBrick = brick; // 🔥 Salva a instância para futuras destruições
+        });
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao iniciar pagamento.');
+    });
+}

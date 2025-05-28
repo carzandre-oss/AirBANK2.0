@@ -322,14 +322,14 @@
     const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
     fetch('/.netlify/functions/createPreference', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            title: 'AirBank SE COMPACT',
-            quantity: 1,
-            unit_price: 297.90
-        })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        title: 'AirBank SE COMPACT',
+        quantity: 1,
+        unit_price: 297.90
     })
+})
     .then(res => res.json())
     .then(data => {
         if (data.init_point) {

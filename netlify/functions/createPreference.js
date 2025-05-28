@@ -20,12 +20,14 @@ exports.handler = async (event) => {
   }
 
   try {
+    const body = JSON.parse(event.body);
+
     const pref = {
       items: [
         {
-          title: 'AirBank SE Compact',
-          quantity: 1,
-          unit_price: 297.9,
+          title: body.title || 'AirBank SE Compact',
+          quantity: body.quantity || 1,
+          unit_price: body.unit_price || 297.9,
           currency_id: 'BRL'
         }
       ],

@@ -1,7 +1,7 @@
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
-  access_token: process.env.MP_ACCESS_TOKEN
+  access_token: 'APP_USR-850320183172539-052512-879be84cb4790b3ee3006551f7be8049-2456283423'
 });
 
 const corsHeaders = {
@@ -19,15 +19,17 @@ exports.handler = async (event) => {
     return { statusCode: 405, headers: corsHeaders, body: JSON.stringify({ error: 'Método não permitido' }) };
   }
 
+  const data = JSON.parse(event.body);
+
   try {
     const payment_data = {
       transaction_amount: 297.9,
       description: 'AirBank SE Compact',
       payment_method_id: 'pix',
       payer: {
-        email: 'comprador@email.com',
-        first_name: 'Cliente',
-        last_name: 'AirBank'
+        email: data.email,
+        first_name: data.nome,
+        last_name: ''
       }
     };
 
@@ -37,10 +39,10 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: corsHeaders,
       body: JSON.stringify({
-        qr_code: payment.response.point_of_interaction.transaction_data.qr_code,
-        qr_code_base64: payment.response.point_of_interaction.transaction_data.qr_code_base64,
-        status: payment.response.status,
-        id: payment.response.id
+        qr_code: payment.body.point_of_interaction.transaction_data.qr_code,
+        qr_code_base64: payment.body.point_of_interaction.transaction_data.qr_code_base64,
+        status: payment.body.status,
+        payment_id: payment.body.id
       })
     };
   } catch (error) {

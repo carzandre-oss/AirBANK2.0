@@ -380,6 +380,16 @@
         alert('Erro ao gerar cobrança PIX.');
     });
 }
+    function copiarPix() {
+    const codigoPix = document.getElementById('qr-code-text').innerText;
+    navigator.clipboard.writeText(codigoPix).then(() => {
+        alert('Código PIX copiado com sucesso!');
+    }).catch(err => {
+        console.error('Erro ao copiar PIX:', err);
+        alert('Não foi possível copiar. Copie manualmente.');
+    });
+}
+
 
     // 👉 Verifica status do PIX
     function checkPixStatus(paymentId) {

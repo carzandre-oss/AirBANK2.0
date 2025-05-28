@@ -290,6 +290,9 @@
     </div>
     
 <script>
+     document.getElementById('checkoutForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 🚫 Impede envio padrão e a URL ficar cheia de parâmetros
+    });
    const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
 
 // Abre a seção de pagamento

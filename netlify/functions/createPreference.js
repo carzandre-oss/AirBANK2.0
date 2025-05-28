@@ -1,42 +1,51 @@
-function payWithMercadoPago() {
-    hidePixArea();
-    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+const mercadopago = require('mercadopago');
 
-    fetch('/.netlify/functions/createPreference', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            title: 'AirBank SE COMPACT',
-            quantity: 1,
-            unit_price: 297.00
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById('mp-area').classList.remove('hidden');
+mercadopago.configure({
+    access_token: process.env.MP_ACCESS_TOKEN // Sua chave de PRODUÇÃO
+});
 
-        // 🔥 Destroi botão antigo se já existir
-        if (walletBrick) {
-            walletBrick.unmount();
-        }
+exports.handler = async (event) => {
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ error: 'Método não permitido' }),
+        };
+    }
 
-        // 🔥 Cria botão novo
-        mp.bricks().create("wallet", "wallet_container", {
-            initialization: {
-                preferenceId: data.preferenceId,
-            },
-            callbacks: {
-                onSubmit: () => {
-                    sendClientData('Mercado Pago');
-                    window.location.href = 'obrigado.html';
+    try {
+        const { title, quantity, unit_price } = JSON.parse(event.body);
+
+        const preference = {
+            items: [
+                {
+                    title: title,
+                    quantity: quantity,
+                    currency_id: 'BRL',
+                    unit_price: unit_price,
                 }
-            }
-        }).then(brick => {
-            walletBrick = brick; // 🔥 Salva a instância para futuras destruições
-        });
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao iniciar pagamento.');
-    });
-}
+            ],
+            back_urls: {
+                success: 'https://airbank.netlify.app/obrigado.html',
+                pending: 'https://airbank.netlify.app/pendente.html',
+                failure: 'https://airbank.netlify.app/erro.html'
+            },
+            auto_return: "approved"
+        };
+
+        const result = await mercadopago.preferences.create(preference);
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                preferenceId: result.body.id,
+                init_point: result.body.init_point // 🔥 URL para redirecionamento automático
+            })
+        };
+    } catch (error) {
+        console.error('Erro ao criar preferência:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Erro interno ao gerar preferência' }),
+        };
+    }
+};

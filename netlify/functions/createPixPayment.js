@@ -47,7 +47,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({
                 payment_id: id,
                 qr_code: point_of_interaction.transaction_data.qr_code,
-                qr_code_base64: point_of_interaction.transaction_data.qr_code_base64
+               // qr_code_base64: point_of_interaction.transaction_data.qr_code_base64
             })
         };
     } catch (error) {

@@ -18,7 +18,7 @@ exports.handler = async (event) => {
         if (!nome || !email || !cpf) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Dados incompletos. Informe nome, email e CPF.' })
+                body: JSON.stringify({ error: 'Dados incompletos. Envie nome, email e CPF.' })
             };
         }
 
@@ -38,6 +38,8 @@ exports.handler = async (event) => {
         };
 
         const payment = await mercadopago.payment.create(paymentData);
+
+        console.log('Resposta do Mercado Pago:', payment);
 
         const { id, point_of_interaction } = payment.body;
 

@@ -1,7 +1,7 @@
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
-   access_token: process.env.MP_ACCESS_TOKEN,
+    access_token: process.env.MP_ACCESS_TOKEN,
     integrator_id: 'dev_24c65fb163bf11ea96500242ac130004',
 });
 
@@ -42,12 +42,19 @@ exports.handler = async (event) => {
 
         const { id, point_of_interaction } = payment.body;
 
+        const qrCode = point_of_interaction.transaction_data?.qr_code || null;
+        const qrCodeBase64 = point_of_interaction.transaction_data?.qr_code_base64 || null;
+
+        if (!qrCode) {
+            throw new Error('QR Code não gerado. Verifique se sua conta Mercado Pago tem PIX habilitado.');
+        }
+
         return {
             statusCode: 200,
             body: JSON.stringify({
                 payment_id: id,
-                qr_code: point_of_interaction.transaction_data.qr_code,
-               // qr_code_base64: point_of_interaction.transaction_data.qr_code_base64
+                qr_code: qrCode,
+                qr_code_base64: qrCodeBase64
             })
         };
     } catch (error) {

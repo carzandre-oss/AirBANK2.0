@@ -315,7 +315,6 @@ function payWithMercadoPago() {
     hidePixArea();
 
     const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
-    localStorage.setItem('checkoutData', JSON.stringify(formData));
 
     fetch('/.netlify/functions/createPreference', {
         method: 'POST',

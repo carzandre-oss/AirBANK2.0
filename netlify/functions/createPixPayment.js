@@ -20,14 +20,20 @@ exports.handler = async (event) => {
   }
 
   try {
+    const body = JSON.parse(event.body);
+
     const payment_data = {
-      transaction_amount: 297.9,
-      description: 'AirBank SE Compact',
+      transaction_amount: body.unit_price || 297.9,
+      description: body.title || 'AirBank SE Compact',
       payment_method_id: 'pix',
       payer: {
-        email: 'comprador@email.com',
-        first_name: 'Cliente',
-        last_name: 'AirBank'
+        email: body.email,
+        first_name: body.nome,
+        last_name: '',
+        identification: {
+          type: 'CPF',
+          number: body.cpf
+        }
       }
     };
 

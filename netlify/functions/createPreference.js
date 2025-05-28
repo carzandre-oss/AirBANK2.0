@@ -1,6 +1,5 @@
 function payWithMercadoPago() {
     hidePixArea();
-    let walletBrick = null;
     const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
     fetch('/.netlify/functions/createPreference', {

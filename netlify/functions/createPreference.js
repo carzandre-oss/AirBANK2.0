@@ -1,4 +1,3 @@
-
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -17,12 +16,19 @@ exports.handler = async (event) => {
     try {
         const { title, quantity, unit_price } = JSON.parse(event.body);
 
+        if (!title || !quantity || !unit_price) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Dados incompletos. Envie title, quantity e unit_price.' })
+            };
+        }
+
         const preference = {
             items: [
                 {
-                    title: title || 'AirBank SE COMPACT',
-                    quantity: quantity || 1,
-                    unit_price: unit_price || 297.90,
+                    title: `${title} + Itens Adicionais`,
+                    quantity: quantity,
+                    unit_price: parseFloat(unit_price),
                     currency_id: 'BRL',
                 }
             ],

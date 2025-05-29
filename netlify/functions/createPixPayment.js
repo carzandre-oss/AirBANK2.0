@@ -1,4 +1,3 @@
-
 const mercadopago = require('mercadopago');
 
 mercadopago.configure({
@@ -15,18 +14,18 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { nome, email, cpf } = JSON.parse(event.body);
+        const { nome, email, cpf, valor } = JSON.parse(event.body);
 
-        if (!nome || !email || !cpf) {
+        if (!nome || !email || !cpf || !valor) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Dados incompletos. Envie nome, email e CPF.' })
+                body: JSON.stringify({ error: 'Dados incompletos. Envie nome, email, CPF e valor total.' })
             };
         }
 
         const paymentData = {
-            transaction_amount: 0.10,
-            description: "AirBank SE COMPACT",
+            transaction_amount: parseFloat(valor), // 🔥 Usa o valor total recebido do frontend
+            description: "AirBank SE COMPACT + Itens Adicionais",
             payment_method_id: "pix",
             payer: {
                 email,

@@ -25,7 +25,7 @@ exports.handler = async (event) => {
         }
 
         const paymentData = {
-            transaction_amount: 297.90,
+            transaction_amount: 0.10,
             description: "AirBank SE COMPACT",
             payment_method_id: "pix",
             payer: {

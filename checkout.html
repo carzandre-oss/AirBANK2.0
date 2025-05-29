@@ -109,34 +109,80 @@
         <!-- Título Principal -->
         <h1 class="text-3xl md:text-4xl font-bold text-center mb-10 fade-in">Finalizar Compra</h1>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <!-- Coluna do Produto -->
-            <div class="fade-in" style="animation-delay: 0.2s;">
-                <div class="bg-dark rounded-2xl p-6 product-image">
-                    <!-- SVG da Mini Bomba de Ar -->
-                    <div class="flex justify-center mb-6">
-                        <img src="media/AB1.png" id="product-image" alt="AIRBANK SE COMPACT" width="200" class="transition-transform duration-500 ease-in-out">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- 👉 COLUNA DA ESQUERDA (Produto + Upsell) -->
+    <div>
+
+        <!-- 🔥 CARD DO PRODUTO PRINCIPAL -->
+        <div class="bg-dark rounded-2xl p-6">
+            <div class="flex justify-center mb-6">
+                <img src="media/AB1.png" id="product-image" alt="AIRBANK SE COMPACT" width="200"
+                    class="transition-transform duration-500 ease-in-out">
+            </div>
+
+            <h2 class="text-xl font-semibold mb-2 text-center">AIRBANK SE COMPACT</h2>
+            <h3 class="text-lg text-center mb-4">Mini Bomba de Ar Compacta</h3>
+
+            <div class="flex justify-center items-center space-x-4 mb-6">
+                <span class="text-grayLight line-through text-lg">R$ 397,90</span>
+                <span class="text-orange text-3xl font-bold">R$ 297,90</span>
+            </div>
+
+            <div class="bg-orange/10 rounded-lg p-4 mb-6">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <span class="text-white">Garanta Já o seu</span>
                     </div>
-                    
-                    <h2 class="text-xl font-semibold mb-2 text-center">AIRBANK SE COMPACT</h2>
-                    <h3 class="text-lg text-center mb-4">Mini Bomba de Ar Compacta</h3>
-                    
-                    <div class="flex justify-center items-center space-x-4 mb-6">
-                        <span class="text-grayLight line-through text-lg">R$ 397,90</span>
-                        <span class="text-orange text-3xl font-bold">R$ 297,90</span>
-                    </div>
-                    
-                    <div class="bg-orange/10 rounded-lg p-4 mb-6">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <span class="text-white">Garanta Já o seu</span>
-                            </div>
-                            <div class="text-orange font-bold text-xl pulse">AIRBANK</div>
+                    <div class="text-orange font-bold text-xl pulse">AIRBANK</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔥 CARDS DE UPSELL -->
+        <div class="mt-6">
+            <h2 class="text-xl font-semibold mb-4">🛍️ Complete seu pedido com estes itens:</h2>
+            <div class="flex overflow-x-auto space-x-4 pb-4">
+
+                <!-- Bag de Trilha -->
+                <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
+                    <img src="media/bag.png" class="w-full h-40 object-contain mb-3" alt="Bag de Trilha">
+                    <h3 class="text-lg font-bold mb-1">Bag de Trilha</h3>
+                    <p class="text-sm text-grayLight mb-2">Perfeita para guardar seus itens.</p>
+                    <p class="text-orange font-bold mb-2">+ R$ 147,90</p>
+                    <button onclick="toggleUpsell('bag')" id="btn-bag"
+                        class="w-full bg-orange text-white py-2 rounded-lg hover:opacity-80">
+                        Adicionar
+                    </button>
+                </div>
+
+                <!-- Kit de Reparo -->
+                <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
+                    <img src="media/kit.png" class="w-full h-40 object-contain mb-3" alt="Kit de Reparo">
+                    <h3 class="text-lg font-bold mb-1">Kit de Reparo</h3>
+                    <p class="text-sm text-grayLight mb-2">Para emergências na trilha.</p>
+                    <p class="text-orange font-bold mb-2">+ R$ 44,90</p>
+                    <button onclick="toggleUpsell('kit')" id="btn-kit"
+                        class="w-full bg-orange text-white py-2 rounded-lg hover:opacity-80">
+                        Adicionar
+                    </button>
+                </div>
+
+                <!-- Suporte de Celular -->
+                <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
+                    <img src="media/suporte.png" class="w-full h-40 object-contain mb-3" alt="Suporte de Celular">
+                    <h3 class="text-lg font-bold mb-1">Suporte de Celular</h3>
+                    <p class="text-sm text-grayLight mb-2">Segurança para seu celular.</p>
+                    <p class="text-orange font-bold mb-2">+ R$ 49,90</p>
+                    <button onclick="toggleUpsell('suporte')" id="btn-suporte"
+                        class="w-full bg-orange text-white py-2 rounded-lg hover:opacity-80">
+                        Adicionar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-</div>
-                        </div>
-    </div>
-</div>
                     </div>
                 </div>
             </div>

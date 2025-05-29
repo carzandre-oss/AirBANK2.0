@@ -346,9 +346,42 @@
         
     
 <script>
-     const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
+       const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
 
-    // 👉 Impede envio padrão do form que gerava URL cheia
+    // 👉 Valores base
+    let precoBase = 297.90;
+    let upsells = {
+        bag: { valor: 147.90, ativo: false },
+        kit: { valor: 44.90, ativo: false },
+        suporte: { valor: 49.90, ativo: false }
+    };
+
+    // 👉 Função Toggle Upsell
+    function toggleUpsell(item) {
+        upsells[item].ativo = !upsells[item].ativo;
+        const btn = document.getElementById('btn-' + item);
+        if (upsells[item].ativo) {
+            btn.innerText = 'Remover';
+            btn.classList.add('bg-red-600');
+            btn.classList.remove('bg-orange');
+        } else {
+            btn.innerText = 'Adicionar';
+            btn.classList.add('bg-orange');
+            btn.classList.remove('bg-red-600');
+        }
+        console.log('Novo total: R$ ' + calcularTotal());
+    }
+
+    // 👉 Função para calcular total com upsell
+    function calcularTotal() {
+        let total = precoBase;
+        for (let key in upsells) {
+            if (upsells[key].ativo) total += upsells[key].valor;
+        }
+        return total.toFixed(2);
+    }
+
+    // 👉 Impede envio padrão do form
     document.getElementById('checkoutForm').addEventListener('submit', function(event) {
         event.preventDefault();
     });
@@ -373,74 +406,75 @@
 
     // 👉 Mercado Pago
     function payWithMercadoPago() {
-    hidePixArea();
+        hidePixArea();
 
-    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
-    fetch('/.netlify/functions/createPreference', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        title: 'AirBank SE COMPACT',
-        quantity: 1,
-        unit_price: 0.10
-    })
-})
-    .then(res => res.json())
-    .then(data => {
-        if (data.init_point) {
-            window.location.href = data.init_point; // 🔥 Redireciona para a página de pagamento
-        } else {
-            alert('Erro ao criar pagamento.');
-            console.error('Erro no pagamento:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Erro:', error);
-        alert('Erro ao iniciar pagamento.');
-    });
-}
+        fetch('/.netlify/functions/createPreference', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                title: 'AirBank SE COMPACT + Upsells',
+                quantity: 1,
+                unit_price: parseFloat(calcularTotal())
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.init_point) {
+                window.location.href = data.init_point;
+            } else {
+                alert('Erro ao criar pagamento.');
+                console.error('Erro no pagamento:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao iniciar pagamento.');
+        });
+    }
 
     // 👉 PIX
-   function payWithPix() {
-    const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
+    function payWithPix() {
+        const formData = Object.fromEntries(new FormData(document.getElementById('checkoutForm')).entries());
 
-    fetch('/.netlify/functions/createPixPayment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            nome: formData.nome,
-            email: formData.email,
-            cpf: formData.cpf
+        fetch('/.netlify/functions/createPixPayment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nome: formData.nome,
+                email: formData.email,
+                cpf: formData.cpf,
+                valor: parseFloat(calcularTotal())
+            })
         })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.qr_code_base64 && data.qr_code) {
-            document.getElementById('pix-area').classList.remove('hidden');
-            document.getElementById('qr-code-img').src = 'data:image/png;base64,' + data.qr_code_base64;
-            document.getElementById('qr-code-text').innerText = data.qr_code;
-            checkPixStatus(data.payment_id);
-        } else {
-            alert('Erro ao gerar QR Code. Verifique os dados ou tente novamente.');
-            console.error('Resposta inválida:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao gerar cobrança PIX:', error);
-        alert('Erro ao gerar cobrança PIX.');
-    });
-}
-    function copiarPix() {
-    const codigoPix = document.getElementById('qr-code-text').innerText;
-    navigator.clipboard.writeText(codigoPix).then(() => {
-        alert('Código PIX copiado com sucesso!');
-    }).catch(err => {
-        console.error('Erro ao copiar PIX:', err);
-        alert('Não foi possível copiar. Copie manualmente.');
-    });
-}
+        .then(res => res.json())
+        .then(data => {
+            if (data.qr_code_base64 && data.qr_code) {
+                document.getElementById('pix-area').classList.remove('hidden');
+                document.getElementById('qr-code-img').src = 'data:image/png;base64,' + data.qr_code_base64;
+                document.getElementById('qr-code-text').innerText = data.qr_code;
+                checkPixStatus(data.payment_id);
+            } else {
+                alert('Erro ao gerar QR Code.');
+                console.error('Resposta inválida:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao gerar cobrança PIX:', error);
+            alert('Erro ao gerar cobrança PIX.');
+        });
+    }
 
+    function copiarPix() {
+        const codigoPix = document.getElementById('qr-code-text').innerText;
+        navigator.clipboard.writeText(codigoPix).then(() => {
+            alert('Código PIX copiado com sucesso!');
+        }).catch(err => {
+            console.error('Erro ao copiar PIX:', err);
+            alert('Não foi possível copiar. Copie manualmente.');
+        });
+    }
 
     // 👉 Verifica status do PIX
     function checkPixStatus(paymentId) {

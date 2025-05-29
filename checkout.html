@@ -110,12 +110,13 @@
         <h1 class="text-3xl md:text-4xl font-bold text-center mb-10 fade-in">Finalizar Compra</h1>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- 👉 COLUNA DA ESQUERDA (Produto + Upsell) -->
 
-        <!-- 🔥 CARD DO PRODUTO PRINCIPAL -->
+    <!-- 🟧 COLUNA ESQUERDA: Produto + Upsell -->
+    <div>
+        <!-- 🔥 Produto -->
         <div class="bg-dark rounded-2xl p-6">
             <div class="flex justify-center mb-6">
-                <img src="media/AB1.png" id="product-image" alt="AIRBANK SE COMPACT" width="200"
+                <img src="media/AB1.png" alt="AIRBANK SE COMPACT" width="200"
                     class="transition-transform duration-500 ease-in-out">
             </div>
 
@@ -129,20 +130,18 @@
 
             <div class="bg-orange/10 rounded-lg p-4 mb-6">
                 <div class="flex justify-between items-center">
-                    <div class="flex items-center">
-                        <span class="text-white">Garanta Já o seu</span>
-                    </div>
+                    <span class="text-white">Garanta Já o seu</span>
                     <div class="text-orange font-bold text-xl pulse">AIRBANK</div>
                 </div>
             </div>
         </div>
 
-        <!-- 🔥 CARDS DE UPSELL -->
+        <!-- 🔥 Upsell -->
         <div class="mt-6">
             <h2 class="text-xl font-semibold mb-4">🛍️ Complete seu pedido com estes itens:</h2>
             <div class="flex overflow-x-auto space-x-4 pb-4">
 
-                <!-- Bag de Trilha -->
+                <!-- Bag -->
                 <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
                     <img src="media/bag.png" class="w-full h-40 object-contain mb-3" alt="Bag de Trilha">
                     <h3 class="text-lg font-bold mb-1">Bag de Trilha</h3>
@@ -154,7 +153,7 @@
                     </button>
                 </div>
 
-                <!-- Kit de Reparo -->
+                <!-- Kit -->
                 <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
                     <img src="media/kit.png" class="w-full h-40 object-contain mb-3" alt="Kit de Reparo">
                     <h3 class="text-lg font-bold mb-1">Kit de Reparo</h3>
@@ -166,7 +165,7 @@
                     </button>
                 </div>
 
-                <!-- Suporte de Celular -->
+                <!-- Suporte -->
                 <div class="bg-dark rounded-2xl p-4 min-w-[250px]">
                     <img src="media/suporte.png" class="w-full h-40 object-contain mb-3" alt="Suporte de Celular">
                     <h3 class="text-lg font-bold mb-1">Suporte de Celular</h3>
@@ -180,12 +179,11 @@
 
             </div>
         </div>
-
     </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Coluna do Formulário -->
+
+    <!-- 🟦 COLUNA DIREITA: Formulário -->
+    <div>
+        <!-- Coluna do Formulário -->
             <div class="fade-in" style="animation-delay: 0.4s;">
                 <form id="checkoutForm" class="bg-dark rounded-2xl p-6 shadow-lg">
                     <!-- Configurações do FormSubmit -->
@@ -342,6 +340,10 @@
             </div>
         </div>
     </div>
+    </div>
+
+</div> <!-- 🔥 Fecha o GRID corretamente -->
+        
     
 <script>
      const mp = new MercadoPago('APP_USR-7eced0e4-3860-4231-9995-d7e903e9141e', { locale: 'pt-BR' });
